@@ -8,7 +8,7 @@ router.post('/spreadsheet/update', updategsheet)
 async function fetchgsheet(req, res, next){
     googleSheets.fetchData(req.params)
     .then( data => {
-        res.json(data).send()
+        res.json(data.resData).send()
     })
 }
 
