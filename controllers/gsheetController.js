@@ -20,7 +20,7 @@ async function fetchData({spreadsheetId}){
     
         for(const sheets of  metaData.data.sheets) {
             const getRows = await googleSheets.spreadsheets.values.get({ auth: oauth2Client, spreadsheetId, range: sheets.properties.title});
-            var sheet_id = sheets.properties.index + 1;
+            var sheet_id = sheets.properties.sheetId;
             resData["sheet_id_"+sheet_id] = []
             for(const row of getRows.data.values) {
                 var key = 0
@@ -48,13 +48,22 @@ async function updateData({spreadsheet_id, sheet_id, row_number, column_number, 
         )
             
         oauth2Client.setCredentials(credentials);
-    
+        var sheet_title;
         const googleSheets = google.sheets({ version: "v4", auth: oauth2Client })
-        sheet_id = sheet_id +1
+        const metaData = await googleSheets.spreadsheets.get({ auth: oauth2Client, spreadsheetId: spreadsheet_id,})
+        for(const sheet of  metaData.data.sheets) {
+            if(sheet.properties.sheetId == sheet_id )
+                sheet_title = sheet.properties.title
+        }
+
+        if(sheet_title == undefined){
+            return { 'error': 'SheetID not found.' , status: 400}      
+        }
+
         const response = await googleSheets.spreadsheets.values.update({
             auth: oauth2Client,
             'spreadsheetId': spreadsheet_id,
-            range: "Sheet" + sheet_id + "!"+ column_number + row_number,
+            range: sheet_title + "!"+ column_number + row_number,
             valueInputOption: 'USER_ENTERED',
             resource: {
               'values': [[value]]
