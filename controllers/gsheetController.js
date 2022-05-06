@@ -1,10 +1,11 @@
 const { google } = require("googleapis");
 const sheets = google.sheets('v4');
 
-// Getting Stored Credentials
-const credentials = require("../credential.json");
+
 
 async function fetchData({spreadsheetId}){
+    // Getting Stored Credentials
+    const credentials = require("../credential.json");
 
     try{
         const oauth2Client = new google.auth.OAuth2(
@@ -39,7 +40,8 @@ async function fetchData({spreadsheetId}){
 }
 
 async function updateData({spreadsheet_id, sheet_id, row_number, column_number, value}){
-
+    // Getting Stored Credentials
+    const credentials = require("../credential.json");
     try{
         const oauth2Client = new google.auth.OAuth2(
             process.env.GOOGLE_CLIENT_ID,
