@@ -65,7 +65,7 @@ async function updateData({spreadsheet_id, sheet_id, row_number, column_number, 
         const response = await googleSheets.spreadsheets.values.update({
             auth: oauth2Client,
             'spreadsheetId': spreadsheet_id,
-            range: sheet_title + "!"+ column_number + row_number,
+            range: sheet_title + "!"+ "R["+row_number+"]" + "C["+column_number+"]",
             valueInputOption: 'USER_ENTERED',
             resource: {
               'values': [[value]]
